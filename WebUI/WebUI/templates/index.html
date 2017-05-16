@@ -1,0 +1,85 @@
+<!doctype html>
+<!-- Home page that is initially displayed -->
+<title>Law Parser</title>
+<!-- Links to stylesheet in the static folder -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<div class="page">
+  <h1>Law Code Parser</h1>
+  <!-- Short cheesy introduction and instructions -->
+  <p>Want to comb through your favorite sections of the United States Law Code? Don't fret! Law Code Parser
+    is here to help you separate the important terms and definitions from the rest of the legislative
+    gobblygoo! Just enter the information below to begin!</p>
+  <!-- Makes a form that posts information to the parse function in the app -->
+  <form action="{{ url_for('parse') }}" method=post class=add-entry>
+    <!-- Drop down list that lets the user choose from the available lawcodes, default is General Provisions -->
+    Lawcode:
+    <select name="lawcode">
+      <option value="usc01">General Provisions</option>
+      <option value="usc02">The Congress</option>
+      <option value="usc03">The President</option>
+      <option value="usc04">Flag and Seal, Seat of Government, and the States</option>
+      <option value="usc05">Government Organization and Employees</option>
+      <option value="usc05A">Government Organization and Employees Appendix</option>
+      <option value="usc06">Domestic Security</option>
+      <option value="usc07">Agriculture</option>
+      <option value="usc08">Aliens and Nationality</option>
+      <option value="usc09">Arbitration</option>
+      <option value="usc10">Armed Forces</option>
+      <option value="usc11">Bankruptcy</option>
+      <option value="usc11A">Bankruptcy Appendix</option>
+      <option value="usc12">Banks and Banking</option>
+      <option value="usc13">Census</option>
+      <option value="usc14">Coast Guard</option>
+      <option value="usc15">Commerce and Trade</option>
+      <option value="usc16">Conservation</option>
+      <option value="usc17">Copyrights</option>
+      <option value="usc18">Crimes and Criminal Procedure</option>
+      <option value="usc18A">Crimes and Criminal Procedure Appendix</option>
+      <option value="usc19">Customs Duties</option>
+      <option value="usc20">Education</option>
+      <option value="usc21">Food and Drugs</option>
+      <option value="usc22">Foreign Relations and Intercourse</option>
+      <option value="usc23">Highways</option>
+      <option value="usc24">Hospitals and Asylums</option>
+      <option value="usc25">Indians</option>
+      <option value="usc26">Internal Revenue Code</option>
+      <option value="usc27">Intoxicating Liquors</option>
+      <option value="usc28">Judiciary and Judicial Procedure</option>
+      <option value="usc28A">Judiciary and Judicial Procedure Appendix</option>
+      <option value="usc29">Labor</option>
+      <option value="usc30">Mineral Lands and Mining</option>
+      <option value="usc31">Money and Finance</option>
+      <option value="usc32">National Guard</option>
+      <option value="usc33">Navigation and Navigable Waters</option>
+      <option value="usc35">Patents</option>
+      <option value="usc36">Patriotic and National Observances, Ceremonies, and Organizations</option>
+      <option value="usc37">Pay and Allowances of the Uniformed Services</option>
+      <option value="usc38">Veterans' Benefits</option>
+      <option value="usc39">Postal Service</option>
+      <option value="usc40">Public Buildings, Property, and Works</option>
+      <option value="usc41">Public Contracts</option>
+      <option value="usc42">The Public Health and Welfare</option>
+      <option value="usc43">Public Lands</option>
+      <option value="usc44">Public Printing and Documents</option>
+      <option value="usc45">Railroads</option>
+      <option value="usc46">Shipping</option>
+      <option value="usc47">Telecommunications</option>
+      <option value="usc48">Territories and Insular Possessions</option>
+      <option value="usc49">Transportation</option>
+      <option value="usc50">War and National Defense</option>
+      <option value="usc50A">War and National Defense Appendix</option>
+      <option value="usc51">National and Commercial Space Programs</option>
+      <option value="usc52">Voting and Elections</option>
+      <option value="usc54">National Park Service and Related Programs</option>
+    </select>
+    <!-- Input field to enter the level id, default is 1 -->
+    <br><br> Section: &nbsp;&nbsp;&nbsp;<input type="text" name="levelid" value="1"> &emsp;
+    <!-- Button that submits all the form information when clicked -->
+    <input type="submit" value="Submit">
+    <!-- Gif of a judge -->
+    <div style="text-align:center"><img src="https://68.media.tumblr.com/7cbbdfd64bec6de0ae18869155f39a4c/tumblr_inline_om0d20N1ch1qkpnrw_500.gif"
+        width=80% /></div>
+  </form>
+  <!-- Credits -->
+  <div class="metanav "> Creds to Clara Li, Marcos Pertierra, Erik Hemberg, and Alex Chang </div>
+</div>

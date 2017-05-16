@@ -1,0 +1,3 @@
+graft WebUI/templates
+graft WebUI/static
+graft WebUI/xml_files

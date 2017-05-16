@@ -1,0 +1,13 @@
+<!doctype html>
+<!--An html page for errors (Level does not exist, invalid level id, no term definitions found, etc)-->
+<title>Error</title>
+<!-- Links to the stylesheet in the static folder -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<div class="page">
+  <h1>Error</h1>
+  <p> There was an error when parsing the law code T_T </p>
+  <!-- Prints the error received from law_parser.py -->
+  <p class="error"> Error: {{ err }} </p>
+  <!-- Links back to the home page -->
+  <a href="/ ">Return</a>
+</div>
