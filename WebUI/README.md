@@ -51,7 +51,9 @@ Press the ```Return``` link at the bottom of screen to go back to the main page 
 
 
 ## Debugging
-There are a couple errors the page could display if the inputs are not valid:
+*Note: Currently this WebUI only runs on Python 3+ and you will get a type error if Python 3 is not set up on your system*
+
+In addition, there are a couple errors the page could display if the inputs are not valid:
 ```
 Error: No term definitions found
 ```
@@ -79,3 +81,5 @@ Means that there is no section in the chosen law code that can be identified wit
 >export FLASK_DEBUG=1
 >```
 >Warning: The Flask debugger allows the user to enter executable code, so only turn this on when necessary.
+
+>If changes to the code (especially the CSS file) do not show up on the webpage, try re-exporting the app, restarting flask, and/or hard-refreshing the webpage (CTRL-F5 on Windows)
