@@ -15,7 +15,7 @@ cd [filepath]/WebUI
 ```
 Next, tell Flask where to find the application by using
 ```
-export FLASK_APP=WebUI
+export FLASK_APP=WebUI/WebUI.py
 ```
 Finally, run the application
 ```
