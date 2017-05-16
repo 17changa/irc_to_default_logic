@@ -43,6 +43,8 @@ The default level id value is 1, but please make sure you enter a valid level id
 ```
 [section]/[subsection]/[paragraph]/[subparagraph]/[clause]/[subclause]/[item]/[subitem]/[subsubitem]
 ```
+For example, ```163/h/1``` specifies section 163, subsection h, paragraph 1.
+
 Press the ```Submit``` button, and you will be redirected to either an error message or a list of terms and definitions that the parser found.
 
 Press the ```Return``` link at the bottom of screen to go back to the main page at any time.
