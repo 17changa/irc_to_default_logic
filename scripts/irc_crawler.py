@@ -5,9 +5,12 @@ from collections import OrderedDict
 import re
 from nltk.tokenize import sent_tokenize, word_tokenize
 
-
-IRC_XML_FILEPATH = join(dirname(dirname(realpath(__file__))), "irc/xml/irc.xml")
-TAGS = ["section", "subsection", "paragraph", "subparagraph", "clause", "subclause", "item", "subitem", "subsubitem"]
+IRC_XML_FILEPATH = join(
+    dirname(dirname(realpath(__file__))), "irc/xml/irc.xml")
+TAGS = [
+    "section", "subsection", "paragraph", "subparagraph", "clause",
+    "subclause", "item", "subitem", "subsubitem"
+]
 
 
 class LevelId:
@@ -15,8 +18,10 @@ class LevelId:
 
     @staticmethod
     def _validate(val):
-        assert isinstance(val, unicode), u"Non-unicode level id: {0}".format(val)
-        assert LevelId.LEVEL_ID_PATTERN.match(val), u"Invalid level id: {0}".format(val)
+        assert isinstance(val,
+                          unicode), u"Non-unicode level id: {0}".format(val)
+        assert LevelId.LEVEL_ID_PATTERN.match(
+            val), u"Invalid level id: {0}".format(val)
 
     def __init__(self, val):
         val = unicode(val)
@@ -43,24 +48,31 @@ class LevelId:
     def __str__(self):
         return unicode(self).encode("UTF-8")
 
+
 class LevelHasNoIdException(Exception):
     pass
+
 
 class LevelDoesNotExistException(Exception):
     pass
 
+
 class Level:
     @staticmethod
-    def _validate(id, tag, num, heading, chapeau, content, sublevels, continuation):
+    def _validate(id, tag, num, heading, chapeau, content, sublevels,
+                  continuation):
         assert isinstance(id, LevelId)
         assert tag in TAGS, u"Unknown tag: {0}".format(tag)
         assert num == id.get_num()
         for s in [heading, chapeau, continuation, content]:
-            assert s is None or isinstance(s, unicode), "Non-unicode text: {0}".format(s)
+            assert s is None or isinstance(
+                s, unicode), "Non-unicode text: {0}".format(s)
         assert isinstance(sublevels, OrderedDict)
 
-    def __init__(self, id, tag, num, heading, chapeau, content, sublevels, continuation):
-        Level._validate(id, tag, num, heading, chapeau, content, sublevels, continuation)
+    def __init__(self, id, tag, num, heading, chapeau, content, sublevels,
+                 continuation):
+        Level._validate(id, tag, num, heading, chapeau, content, sublevels,
+                        continuation)
         self.id = id
         self.tag = tag
         self.num = num
@@ -93,7 +105,8 @@ class Level:
             if num_sentences == 0:
                 self._avg_tokens_per_sentence = 0
             else:
-                self._avg_tokens_per_sentence = num_tokens / float(num_sentences)
+                self._avg_tokens_per_sentence = num_tokens / float(
+                    num_sentences)
         return self._avg_tokens_per_sentence
 
     def get_sentences(self, sentence_tokenizer=sent_tokenize):
@@ -147,11 +160,13 @@ class IRCCrawler:
         return "{{{0}}}".format(self.nsmap[self.default_namespace])
 
     def _stringify_node(self, node):
-        return etree.tostring(node, method="text", encoding="UTF-8").strip().decode("UTF-8")
+        return etree.tostring(
+            node, method="text", encoding="UTF-8").strip().decode("UTF-8")
 
     def _get_level_node(self, level_id):
         assert isinstance(level_id, LevelId)
-        xpath_expression = "//{0}:*[@identifier='/us/usc/t26/{1}']".format(self.default_namespace, level_id)
+        xpath_expression = "//{0}:*[@identifier='/us/usc/t26/{1}']".format(
+            self.default_namespace, level_id)
         nodes = self.root.xpath(xpath_expression, namespaces=self.nsmap)
         assert len(nodes) <= 1
         if len(nodes) == 0:
@@ -169,7 +184,12 @@ class IRCCrawler:
         assert node.tag.startswith(ns_prefix)
         tag = node.tag.replace(ns_prefix, '', 1)
         num = None
-        level = {"heading": None, "chapeau": None, "content": None, "continuation": None}
+        level = {
+            "heading": None,
+            "chapeau": None,
+            "content": None,
+            "continuation": None
+        }
         sublevels = OrderedDict()
         for c in node:
             c_tag = c.tag.replace(ns_prefix, '', 1)
@@ -186,7 +206,8 @@ class IRCCrawler:
                         # Continuations can be "sandwiched" between sublevels
                         # See 10.4 in http://xml.house.gov/schemas/uslm/1.0/USLM-User-Guide.pdf
                         prev_sublevel_num = next(reversed(sublevels))
-                        prev_sublevel_and_continuation = sublevels[prev_sublevel_num]
+                        prev_sublevel_and_continuation = sublevels[
+                            prev_sublevel_num]
                         if prev_sublevel_and_continuation[1] is None:
                             prev_sublevel_and_continuation[1] = continuation
                         else:
@@ -204,7 +225,8 @@ class IRCCrawler:
                 sublevels[sublevel_num] = [sublevel, None]
             elif self.debug:
                 print(u"Warning: Skipping element with tag {0}".format(c.tag))
-        return Level(id, tag, num, level["heading"], level["chapeau"], level["content"], sublevels, level["continuation"])
+        return Level(id, tag, num, level["heading"], level["chapeau"],
+                     level["content"], sublevels, level["continuation"])
 
     def _iterate_over_nodes(self, tags=[]):
         for t in tags:
@@ -249,6 +271,7 @@ class IRCCrawler:
     #         levels.append(level)
     #     return levels
 
+
 def validate_sections(crawler=None):
     if crawler is None:
         crawler = IRCCrawler()
@@ -257,13 +280,15 @@ def validate_sections(crawler=None):
         count += 1
     print("Validated {} sections".format(count))
 
+
 def get_sections_ordered_by_average_tokens_per_sentence(crawler=None):
     if crawler is None:
         crawler = IRCCrawler()
     section_num_avg_tokens_per_sent_pairs = []
     for section in crawler.iterate_over_sections():
         average_tokens_per_sentence = section.get_average_tokens_per_sentence()
-        section_num_avg_tokens_per_sent_pairs.append((section.num, average_tokens_per_sentence))
+        section_num_avg_tokens_per_sent_pairs.append(
+            (section.num, average_tokens_per_sentence))
     section_num_avg_tokens_per_sent_pairs.sort(key=lambda pair: pair[1])
     return section_num_avg_tokens_per_sent_pairs
 
@@ -279,9 +304,11 @@ def main(args):
     # validate_sections(crawler=crawler)
     # print(get_sections_ordered_by_average_tokens_per_sentence(crawler=crawler)[:50])
 
+
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Crawl the Internal Revenue Code.")
+    parser = argparse.ArgumentParser(
+        description="Crawl the Internal Revenue Code.")
     parser.add_argument("--level-id",
                         type=str,
                         default="s163/h",
@@ -290,5 +317,3 @@ if __name__ == "__main__":
                               "For example, 's163/h/1' specifies section 163, subsection h, paragraph 1.")
     args = parser.parse_args()
     main(args)
-
-
