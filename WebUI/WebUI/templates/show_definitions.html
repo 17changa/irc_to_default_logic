@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- An html page that shows all the definitions and key terms after the parser is ran -->
+<title>Key Terms</title>
+<!-- Links to the stylesheet in the static folder -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<div class="page">
+  <h1>Key Terms and Definitions</h1><br>
+  <ul class=entries>
+    <!-- Loops through each term/definition pair in the array ans received from law_parser.py -->
+    {% for entry in ans %}
+    <li>
+      <!-- Uses dictionaries to print the term and its matching definition -->
+      <p>Term: {{ entry["term"] }}</p>
+      <p>Definition: {{ entry["definition"]["sentence"] }}</p>
+      <hr>
+    </li>
+    {% endfor %}
+    <br>
+  </ul>
+  <!-- Link to return to home page -->
+  <a href="/ ">Return</a>
+</div>
