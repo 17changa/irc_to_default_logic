@@ -20,11 +20,13 @@ def parse_fol(sentences):
         results.append(drs[0].fol())
     return results
 
+
 def stringify_output(sentences, results):
     output = []
     for s, r in zip(sentences, results):
         output.extend([s, u'\n', unicode(r), u'\n\n'])
     return u''.join(output)
+
 
 def main(args):
     crawler = irc_crawler.IRCCrawler()
@@ -44,7 +46,9 @@ def main(args):
         try:
             results = parse_fol(sentences)
         except candc_boxer_api.CCBoxerAPIException:
-            print("Warning: C&C/Boxer API Failed. Using AMR parser and AMR to FOL translation instead.")
+            print(
+                "Warning: C&C/Boxer API Failed. Using AMR parser and AMR to FOL translation instead."
+            )
             amr_results = parse_amr.parse_amr(sentences, parser="camr")
             results = [amr2fol.translate(amr) for amr in amr_results]
     elif args.representation == "amr":
@@ -62,31 +66,54 @@ def main(args):
         # Need user to specify part of background theory.
         # However, this could actually be done later, when we actually want to "run" the default logic.
         definitions_as_fol = definition_extractor.fol_definitions(level)
-        background_theory = [Expression.fromstring(d["fol"]) for d in definitions_as_fol]
+        background_theory = [
+            Expression.fromstring(d["fol"]) for d in definitions_as_fol
+        ]
 
         scope_level_id = level.id.get_section_id()
         scope_level = crawler.get_level(scope_level_id)
         if args.dl_hack:
             if scope_level_id == "s163":
                 # Missing "obvious" rule that personal interest is interest; "interest" is not a defined term
-                background_theory.append(Expression.fromstring(u"all x.({}(x) -> interest(x))".format(definition_extractor.term_to_predicate(u"personal interest"))))
+                background_theory.append(
+                    Expression.fromstring(
+                        u"all x.({}(x) -> interest(x))".format(
+                            definition_extractor.term_to_predicate(
+                                u"personal interest"))))
                 # Missing the user's background info (namely that the user's interest is personal interest; the user wants to know if it is deductible)
-                background_theory.append(Expression.fromstring(u"{}(y)".format(definition_extractor.term_to_predicate(u"personal interest"))))
+                background_theory.append(
+                    Expression.fromstring(u"{}(y)".format(
+                        definition_extractor.term_to_predicate(
+                            u"personal interest"))))
                 default_rules = [
-                    Expression.fromstring(u"all x.({}(x) -> deductible(x))".format(definition_extractor.term_to_predicate(u"qualified residence interest"))),
-                    Expression.fromstring(u"all x.({}(x) -> -deductible(x))".format(definition_extractor.term_to_predicate(u"personal interest"))),
-                    Expression.fromstring(u"all x.({}(x) -> deductible(x))".format(definition_extractor.term_to_predicate(u"interest")))
+                    Expression.fromstring(
+                        u"all x.({}(x) -> deductible(x))".format(
+                            definition_extractor.term_to_predicate(
+                                u"qualified residence interest"))),
+                    Expression.fromstring(
+                        u"all x.({}(x) -> -deductible(x))".format(
+                            definition_extractor.term_to_predicate(
+                                u"personal interest"))), Expression.
+                    fromstring(u"all x.({}(x) -> deductible(x))".format(
+                        definition_extractor.term_to_predicate(u"interest")))
                 ]
             else:
                 default_rules = []
-                print("Warning: Hard-coding option not a available for section {}.".format(scope_level_id))
+                print(
+                    "Warning: Hard-coding option not a available for section {}.".
+                    format(scope_level_id))
         else:
             default_rules_sentences = rule_extractor.extract_rules(scope_level)
 
             try:
-                default_rules = [parse_fol(sentences) for sentences in default_rules_sentences]
+                default_rules = [
+                    parse_fol(sentences)
+                    for sentences in default_rules_sentences
+                ]
             except candc_boxer_api.CCBoxerAPIException:
-                print("Warning: C&C/Boxer API Failed. Using AMR parser and AMR to FOL translation instead.")
+                print(
+                    "Warning: C&C/Boxer API Failed. Using AMR parser and AMR to FOL translation instead."
+                )
                 default_rules = []
                 for sentences in default_rules_sentences:
                     amr_results = parse_amr.parse_amr(sentences, parser="camr")
@@ -97,7 +124,8 @@ def main(args):
             # Earlier rules have lower priority
             default_rules.reverse()
 
-        default_theory = default_logic.SupernormalDefaultTheory(background_theory, default_rules)
+        default_theory = default_logic.SupernormalDefaultTheory(
+            background_theory, default_rules)
         with open(args.output_file, 'w') as f:
             f.write("# Background Theory:\n")
             for e in default_theory.background_theory:
@@ -109,23 +137,32 @@ def main(args):
                 f.write("\n")
         return
     else:
-        raise Exception("Invalid representation arg: {0}".format(args.representation))
+        raise Exception(
+            "Invalid representation arg: {0}".format(args.representation))
 
     output = stringify_output(sentences, results)
     with open(args.output_file, 'w') as f:
         f.write(output.encode("UTF-8"))
 
+
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Parse sections from the Internal Revenue Code.")
+    parser = argparse.ArgumentParser(
+        description="Parse sections from the Internal Revenue Code.")
     parser.add_argument("--level-id",
                         type=str,
                         default="s163/h/2",
                         help="Specifies the level (section, subsection, paragraph, etc.) to find. " + \
                               "Should have pattern s[section]/[subsection]/[paragraph]/[subparagraph]/[clause]/[subclause]/[item]. " + \
                               "For example, 's163/h/1' specifies section 163, subsection h, paragraph 1.")
-    parser.add_argument("--representation", choices=["fol", "amr", "amr2fol", "default_logic"], default="fol")
+    parser.add_argument(
+        "--representation",
+        choices=["fol", "amr", "amr2fol", "default_logic"],
+        default="fol")
     parser.add_argument("--output-file", type=str, default="pipeline.out")
-    parser.add_argument("--dl-hack", action="store_true", help="Hard-code part of default logic for section 163(h).")
+    parser.add_argument(
+        "--dl-hack",
+        action="store_true",
+        help="Hard-code part of default logic for section 163(h).")
     args = parser.parse_args()
     main(args)
