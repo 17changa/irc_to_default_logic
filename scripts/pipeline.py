@@ -120,7 +120,7 @@ def main(args):
                     results = [amr2fol.translate(amr) for amr in amr_results]
                     default_rules.extend(results)
 
-	    flatten = [y for x in default_rules for y in x]
+            flatten = [y for x in default_rules for y in x]
             default_rules = [Expression.fromstring(str(e)) for e in flatten]
             # Earlier rules have lower priority
             default_rules.reverse()
