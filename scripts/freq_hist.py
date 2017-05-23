@@ -1,4 +1,4 @@
-# This Python file uses the following encoding: UTF-8
+ # This Python file uses the following encoding: UTF-8
 from irc_crawler import IRCCrawler
 from definition_extractor import extract_defined_terms
 import matplotlib.pyplot as plt
@@ -6,6 +6,7 @@ import numpy as np
 import operator
 import collections
 import matplotlib.patches as mpatches
+import os
 
 
 def make_freq_hist(level):
@@ -35,19 +36,20 @@ def make_freq_hist(level):
             kword = section_words[index]
             realindex = keys.index(kword)
             colors[realindex] = 'r'
-    file_object = open('defined_terms.txt', 'r')
-    irc = file_object.readlines()
-    irc_count = collections.Counter(irc)
-    irc_freq = irc_count.values()  # the frequencies themselves
-    irc_words = irc_count.keys()  # the words pertaining to each frequency
-    for index, word in enumerate(section_words, start=0):
-        hi = word + '\n'
-        hii = irc_words.index(hi.encode('ascii', 'ignore'))  # indexes of each defined word.
-        h = section_words.index(word)
-        if irc_freq[hii] > section_freq[h]:
-            kword = section_words[index]
-            realindex = keys.index(kword)
-            colors[realindex] = 'g'
+    # os.chdir('definition_stats')  # entered definition_stats directory
+    # file_object = open('defined_terms.txt', 'r')  # open the defined terms text
+    # irc = file_object.readlines()  # read the lines
+    # irc_count = collections.Counter(irc)  # count how many times every word is used in the irc
+    # irc_freq = irc_count.values()  # the frequencies
+    # irc_words = irc_count.keys()  # the words associated with each frequency
+    # for index, word in enumerate(section_words, start=0):  # for each loop that finds words
+    #     hi = word + '\n'
+    #     hii = irc_words.index(hi.encode('ascii', 'ignore'))  # indexes of each defined word.
+    #     h = section_words.index(word)
+    #     if irc_freq[hii] > section_freq[h]:
+    #         kword = section_words[index]
+    #         realindex = keys.index(kword)
+    #         colors[realindex] = 'g'
     plt.figure(figsize=(16, 9))
     pos = np.arange(len(values))  # create list with numbers from 1 - the length of the list of frequencies
     ax = plt.axes()

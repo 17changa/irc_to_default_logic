@@ -6,7 +6,7 @@ import re
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 IRC_XML_FILEPATH = join(
-    dirname(dirname(realpath(__file__))), "irc/xml/irc.xml")
+    dirname(dirname(realpath(__file__))), "irc/xml/usc51.xml")
 TAGS = [
     "section", "subsection", "paragraph", "subparagraph", "clause",
     "subclause", "item", "subitem", "subsubitem"
