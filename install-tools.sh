@@ -35,7 +35,8 @@ cd tools
 # cd ..
 
 # Install CAMR Parser
-git clone https://github.com/c-amr/camr.git
+# git clone https://github.com/c-amr/camr.git
+git clone https://github.com/clarali210/camr.git
 cd camr
 ./scripts/config.sh
 wget http://www.cs.brandeis.edu/~cwang24/files/amr-anno-1.0.train.m.tar.gz
