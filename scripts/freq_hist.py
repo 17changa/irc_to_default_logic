@@ -6,7 +6,7 @@ import numpy as np
 import operator
 import collections
 import matplotlib.patches as mpatches
-
+import os
 
 def make_freq_hist(level):
     text = u'\n'.join(level.get_sentences())
@@ -35,6 +35,7 @@ def make_freq_hist(level):
             kword = section_words[index]
             realindex = keys.index(kword)
             colors[realindex] = 'r'
+    os.chdir('definition_stats')
     file_object = open('defined_terms.txt', 'r')
     irc = file_object.readlines()
     irc_count = collections.Counter(irc)
