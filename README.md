@@ -92,7 +92,12 @@ python -m scripts.stats.semparsing_stats [--output-file OUTPUT_FILE]
                                          [--definitions-filepath DEF_FILEPATH]
                                          [--rules-filepath RULES_FILEPATH]
 ```
-Finally, the outputs of these scripts can be used to plot histograms with the `scripts/stats/plot_hists.py` script.
+Finally, the outputs of these scripts can be used to plot histograms with the `scripts/stats/plot_hists.py` script.  
 ```
 python -m scripts.stats.plot_hists
+
+```
+For a frequency histogram of defined terms in a specific section, run `scripts/freq_hist.py` after making sure `scripts/stats/definition_stats.py` runs successfully:  
+```
+python scripts/freq_hist.py [--level-id LEVEL_ID]
 ```
