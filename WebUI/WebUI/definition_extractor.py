@@ -98,9 +98,8 @@ class DefExtractor:
 
     # Main function of DefExtractor class that calls on helper methods to parse the lawcode
     # section and returns a dictionary of terms and definitions
-    def main(self, lawcode, titlenum, levelid):
+    def main(self, crawler, levelid):
         # Creates a crawler to parse through the given xml file
-        crawler = Crawler(lawcode, titlenum)
         level = crawler.get_level(levelid)
         # Extracts the terms and definitions based on the given level id
         definitions = self.terms_definitions(level)

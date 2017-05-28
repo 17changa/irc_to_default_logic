@@ -17,6 +17,7 @@
     {% endfor %}
     <br>
   </ul>
+  <div style="text-align:center"><img src="{{ url_for('static', filename = 'histograms/hist_t{0}{1}.png'.format(title, level)) }}" width=100%/></div>
   <!-- Link to return to home page -->
   <a href="/ ">Return</a>
 </div>

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Imports classes needed to create Flask application
-from flask import Flask, request, url_for, render_template
+from flask import Flask, request, url_for, render_template, send_file
 
 # Creates the application with title name
 app = Flask(__name__)
 
 # When uncommented configures the app to run with debugging set to true
 #app.config.update(dict(DEBUG=True))
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 
 # Creates the main page of the app using format from index.html
@@ -15,8 +16,11 @@ def main():
     return render_template('index.html')
 
 
+import os
 from os.path import join
 from .definition_extractor import DefExtractor
+from .crawler import Crawler
+from .freq_hist import make_freq_hist
 
 
 # Creates the parsing function of the app that received information from the form and posts
@@ -88,10 +92,15 @@ def parse():
         'usc54': '54',
     }
     try:
-        # Calls the main method of the definition parser on the chosen xml file
-        words = DefExtractor().main(xml_filepath, titlenum[lawcode], levelid)
-        # Sends output of the main function to show_definitions.html and displays it accordingly
-        return render_template('show_definitions.html', ans=words)
+        crawl = Crawler(xml_filepath, titlenum[lawcode])
+        make_freq_hist(crawl,
+                       crawl.get_level(levelid), titlenum[lawcode], levelid)
+        words = DefExtractor().main(crawl, levelid)
+        return render_template(
+            'show_definitions.html',
+            ans=words,
+            title=titlenum[lawcode],
+            level=levelid)
     # Handles errors from executing the code above
     except Exception as e:
         # Displays the error page that properly prints the given error

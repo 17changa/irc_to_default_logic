@@ -259,3 +259,23 @@ class Crawler:
         level_node = self._get_level_node(level_id)
         level = self._parse_level(level_node)
         return level
+
+    def _iterate_over_nodes(self, tags=[]):
+        for t in tags:
+            assert t in TAGS, u"Unknown tag: {}".format(t)
+        tags = ["{0}{1}".format(self._namespace_prefix(), t) for t in tags]
+        for node in self.root.iter(*tags):
+            yield node
+
+    def iterate_over_sections(self):
+        for node in self._iterate_over_nodes(tags=["section"]):
+            if node.get("status") in ["repealed", "omitted"]:
+                # Skip "repealed" (288 counted) and "omitted" (2 counted) sections
+                # Other statuses are "renumbered" (17 counted) and "reserved" (2 counted)
+                # All other sections have no status.
+                continue
+            try:
+                level = self._parse_level(node)
+            except LevelHasNoIdException:
+                continue
+            yield level
